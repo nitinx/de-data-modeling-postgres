@@ -74,22 +74,25 @@ INSERT INTO songplay (start_time, user_id, level, song_id, artist_id, session_id
 user_table_insert = ("""
 INSERT INTO dim_user (user_id, first_name, last_name, gender, level) 
      VALUES (%s, %s, %s, %s, %s)
-     ON CONFLICT (user_id) DO NOTHING;
+     ON CONFLICT (user_id) DO UPDATE SET level = excluded.level;
 """)
 
 song_table_insert = ("""
 INSERT INTO dim_song (song_id, title, artist_id, year, duration) 
      VALUES (%s, %s, %s, %s, %s)
+     ON CONFLICT (song_id) DO UPDATE SET duration = excluded.duration;
 """)
 
 artist_table_insert = ("""
 INSERT INTO dim_artist (artist_id, name, location, latitude, longitude) 
      VALUES (%s, %s, %s, %s, %s)
+     ON CONFLICT (artist_id) DO UPDATE SET location = excluded.location;
 """)
 
 time_table_insert = ("""
 INSERT INTO dim_time (start_time, hour, day, week, month, year, weekday) 
      VALUES (%s, %s, %s, %s, %s, %s, %s)
+     ON CONFLICT (start_time) DO NOTHING;
 """)
 
 # FIND SONGS
