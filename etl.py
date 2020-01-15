@@ -7,6 +7,17 @@ import datetime
 
 
 def process_song_file(cur, filepath):
+    """Process Song Files
+
+    Parameters:
+    cur: Database Connection Cursor object
+    filepath: Source file path
+
+    Returns:
+    None
+
+   """    
+
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -31,6 +42,17 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """Process Log Files
+
+    Parameters:
+    cur: Database Connection Cursor object
+    filepath: Source file path
+
+    Returns:
+    None
+
+   """    
+
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -75,8 +97,7 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = (index, 
-                         row.timestamp, 
+        songplay_data = (row.timestamp, 
                          row.userId, 
                          row.level, 
                          songid, 
@@ -84,10 +105,23 @@ def process_log_file(cur, filepath):
                          row.sessionId, 
                          row.location, 
                          row.userAgent)
+
         cur.execute(songplay_table_insert, songplay_data)
 
 
 def process_data(cur, conn, filepath, func):
+    """Iterates through data files
+
+    Parameters:
+    cur: Database Connection Cursor object
+    filepath: Source file path
+    func: Function to process and insert data
+
+    Returns:
+    None
+
+   """    
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
